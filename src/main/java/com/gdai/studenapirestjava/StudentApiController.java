@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/student")
@@ -42,10 +40,10 @@ public class StudentApiController {
 
 
     @PatchMapping("/{studentId}")
-    public ResponseEntity<Student> updatedStudent (@PathVariable Integer studentId, @RequestBody Student student) {
+    public ResponseEntity<Void> updatedStudent (@PathVariable Integer studentId, @RequestBody Student student) {
 
         Optional<Student> studentOptional = findStudentById(studentId);
-        if (!studentOptional.isPresent())  return ResponseEntity.notFound().build();
+        if (studentOptional.isEmpty())  return ResponseEntity.notFound().build();
 
         List<Student> updatedList = listStudent.stream().map(studentData -> {
             if(studentData.getId().equals(studentId)) {
@@ -58,6 +56,18 @@ public class StudentApiController {
         listStudent.clear();
         listStudent.addAll(updatedList);
 
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @DeleteMapping("/{studentId}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Integer studentId, @RequestBody Student student ){
+
+        Optional<Student> studentFound = this.findStudentById(studentId);
+
+        if (studentFound.isEmpty())  return ResponseEntity.notFound().build();
+
+        listStudent.remove(studentFound.get());
         return ResponseEntity.noContent().build();
     }
 
