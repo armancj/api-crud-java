@@ -61,7 +61,7 @@ public class StudentApiController {
 
 
     @DeleteMapping("/{studentId}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Integer studentId, @RequestBody Student student ){
+    public ResponseEntity<Void> deleteStudent(@PathVariable Integer studentId ){
 
         Optional<Student> studentFound = this.findStudentById(studentId);
 
